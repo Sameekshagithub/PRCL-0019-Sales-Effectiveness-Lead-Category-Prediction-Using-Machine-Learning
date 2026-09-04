@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FicZon Lead Category Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 40px; }
+        .card { background: #fff; max-width: 520px; margin: auto; padding: 30px;
+                border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #264653; text-align: center; }
+        label { display: block; margin-top: 14px; font-weight: bold; color: #333; }
+        select, input { width: 100%; padding: 8px; margin-top: 6px; border-radius: 5px;
+                        border: 1px solid #ccc; box-sizing: border-box; }
+        button { margin-top: 22px; width: 100%; padding: 12px; background: #2a9d8f;
+                 color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #21867a; }
+        .result { margin-top: 20px; padding: 14px; border-radius: 6px; text-align: center;
+                  font-size: 18px; font-weight: bold; }
+        .high { background: #d8f3dc; color: #1b4332; }
+        .low { background: #ffe5d9; color: #9d0208; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>FicZon Lead Category Predictor</h2>
+        <form method="POST" action="/predict">
+            <label>Source</label>
+            <select name="Source">
+                {% for opt in options['Source'] %}<option value="{{ opt }}">{{ opt }}</option>{% endfor %}
+            </select>
+
+            <label>Sales Agent</label>
+            <select name="Sales_Agent">
+                {% for opt in options['Sales_Agent'] %}<option value="{{ opt }}">{{ opt }}</option>{% endfor %}
+            </select>
+
+            <label>Location</label>
+            <select name="Location">
+                {% for opt in options['Location'] %}<option value="{{ opt }}">{{ opt }}</option>{% endfor %}
+            </select>
+
+            <label>Delivery Mode</label>
+            <select name="Delivery_Mode">
+                {% for opt in options['Delivery_Mode'] %}<option value="{{ opt }}">{{ opt }}</option>{% endfor %}
+            </select>
+
+            <label>Product ID</label>
+            <input type="number" step="any" name="Product_ID" value="1" required>
+
+            <label>Mobile Number Provided?</label>
+            <select name="Has_Mobile">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+
+            <label>Email Provided?</label>
+            <select name="Has_Email">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+
+            <label>Lead Created Date</label>
+            <input type="date" name="Created" required>
+
+            <button type="submit">Predict Lead Category</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result {{ 'high' if prediction == 'High Potential' else 'low' }}">
+            Predicted Category: {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
