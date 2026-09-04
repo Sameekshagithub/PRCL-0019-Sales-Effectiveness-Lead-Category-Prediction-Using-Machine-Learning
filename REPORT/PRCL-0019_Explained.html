@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRCL-0019 — Explained | Sales Effectiveness Lead Category Prediction</title>
+<style>
+  :root {
+    --dark-green: #1F4E45;
+    --green: #2E6B5E;
+    --light-green: #EAF3F0;
+    --text: #222222;
+    --muted: #5a6763;
+    --border: #d8e4e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Calibri, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: #f6f8f7;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 48px 56px 64px;
+    box-shadow: 0 0 24px rgba(0,0,0,0.05);
+  }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 3px solid var(--dark-green);
+  }
+  header h1 {
+    color: var(--dark-green);
+    font-size: 2.1rem;
+    margin: 0 0 8px;
+  }
+  header p.subtitle {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0 8px;
+    font-size: 0.95rem;
+  }
+  .meta-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .meta-table td.label {
+    background: var(--dark-green);
+    color: #fff;
+    font-weight: 600;
+    width: 30%;
+  }
+  nav.toc {
+    background: var(--light-green);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin: 32px 0;
+  }
+  nav.toc h2 {
+    margin-top: 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--dark-green);
+  }
+  nav.toc ol {
+    columns: 2;
+    -webkit-columns: 2;
+    padding-left: 20px;
+    margin: 8px 0 0;
+  }
+  nav.toc li { margin-bottom: 6px; font-size: 0.92rem; }
+  nav.toc a { color: var(--green); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  h2 {
+    color: var(--dark-green);
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 6px;
+    margin-top: 40px;
+  }
+  h3 {
+    color: var(--dark-green);
+    font-size: 1.1rem;
+    margin-top: 24px;
+  }
+  p { margin: 12px 0; font-size: 0.98rem; }
+  ul, ol.plain { padding-left: 22px; }
+  li { margin-bottom: 6px; font-size: 0.98rem; }
+
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9rem;
+  }
+  table.data th {
+    background: var(--dark-green);
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+  }
+  table.data td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.data tr:nth-child(even) td { background: var(--light-green); }
+  table.data tr.highlight td { background: #d7ebe3; font-weight: 600; }
+
+  .callout {
+    background: var(--light-green);
+    border-left: 4px solid var(--green);
+    padding: 14px 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+  .callout strong { color: var(--dark-green); }
+
+  .bug-box {
+    background: #fdf2f0;
+    border-left: 4px solid #c0392b;
+    padding: 14px 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+  .bug-box h3 { margin-top: 0; color: #a5342a; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--dark-green);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    margin-right: 6px;
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 28px 20px; }
+    nav.toc ol { columns: 1; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .wrap { box-shadow: none; max-width: 100%; }
+    nav.toc { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>PRCL-0019 — Explained</h1>
+    <p class="subtitle">A plain-language walkthrough of the Sales Effectiveness / Lead Category Prediction project</p>
+  </header>
+
+  <table class="meta-table">
+    <tr><td class="label">Project</td><td>PRCL-0019: Sales Effectiveness — Lead Category Prediction Using Machine Learning</td></tr>
+    <tr><td class="label">Client</td><td>FicZon Inc. (IT Solutions Provider)</td></tr>
+    <tr><td class="label">Dataset</td><td>7,422 lead records, 9 columns, pulled live from a MySQL database</td></tr>
+    <tr><td class="label">Goal</td><td>Predict whether a new lead is High Potential or Low Potential at the moment it is captured</td></tr>
+    <tr><td class="label">Winning Model</td><td><span class="badge">Gradient Boosting</span> 72.04% test accuracy, smallest overfitting gap of all six models tried</td></tr>
+  </table>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#s1">What Problem Was This Solving?</a></li>
+      <li><a href="#s2">Where the Data Came From</a></li>
+      <li><a href="#s3">What the Exploration Showed</a></li>
+      <li><a href="#s4">Cleaning the Data</a></li>
+      <li><a href="#s5">The Target Variable — and the Bug</a></li>
+      <li><a href="#s6">Preparing the Data for Modelling</a></li>
+      <li><a href="#s7">Building and Comparing the Models</a></li>
+      <li><a href="#s8">What Drives the Predictions</a></li>
+      <li><a href="#s9">What This Means for FicZon</a></li>
+      <li><a href="#s10">Limitations and Next Steps</a></li>
+      <li><a href="#s11">The Big Picture</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="s1">1. What Problem Was This Solving?</h2>
+  <p>FicZon Inc. sells IT products and picks up most of its leads through its website and call channels. Sales teams were sorting incoming leads into "good" vs. "bad" by hand, and the quality-control process that checks this only kicks in after the fact — it tells the team what went wrong last month, not which lead to call first today.</p>
+  <p>The project's job was to replace that guesswork with a machine learning model that scores every lead the moment it comes in, tagging it <strong>High Potential</strong> or <strong>Low Potential</strong> so agents know where to focus their time immediately, instead of finding out weeks later.</p>
+
+  <h2 id="s2">2. Where the Data Came From</h2>
+  <p>Unlike a typical training exercise that starts from a downloaded spreadsheet, this project connected directly to FicZon's live MySQL database and pulled 7,422 real lead records covering 9 fields: when the lead was created, which product it was for, how it arrived (Source), contact details, the assigned sales agent, location, delivery mode, and its current status.</p>
+  <p>Because it's a live client database, the password was never written into the code — it was typed in securely each session using Python's <code>getpass()</code> tool, and an untouched backup copy of the raw pull was kept aside before any cleaning began.</p>
+
+  <h2 id="s3">3. What the Exploration Showed</h2>
+  <ul>
+    <li>Call and Website are by far the two biggest lead sources, matching FicZon's own description of itself as a digitally-driven business.</li>
+    <li>Workload is lopsided: a few sales agents (especially one nicknamed Sales-Agent-4) handle far more leads than the rest of the 13-person team.</li>
+    <li>Bangalore and Chennai dominate the location breakdown, with a long tail of smaller cities and an "Other Locations" bucket.</li>
+    <li>The Status field — the raw column everything else is built from — had 11 different values, with Junk Lead and Not Responding as the two most common outcomes.</li>
+  </ul>
+  <p>That last point turned out to matter a lot, as the next section explains.</p>
+
+  <h2 id="s4">4. Cleaning the Data</h2>
+  <p>A few columns (Product_ID, Source, Mobile, Sales_Agent, Location) had missing or placeholder entries — things like blank text or the literal string "#VALUE!" standing in for a missing phone number. These were filled in with an explicit "Unknown" label rather than deleted, so the fact that something was missing stayed useful information for the model rather than being thrown away. Two exact duplicate rows were removed, and a handful of unusual Product_ID values were capped (winsorized) instead of dropped, so no lead record was lost purely because one field looked odd.</p>
+
+  <h2 id="s5">5. The Target Variable — and the Bug That Nearly Broke Everything</h2>
+  <p>The whole project depends on a column called Lead_Category (High Potential vs. Low Potential), but the raw table doesn't have one — it has to be built from the Status field. This is the most important part of the story.</p>
+
+  <h3>5.1 What went wrong</h3>
+  <div class="bug-box">
+    <h3>🐛 Root Cause: Case-Sensitive String Mismatch</h3>
+    <p>The first attempt at building this mapping used a dictionary of expected status labels like <em>'Converted'</em>, <em>'Qualified'</em>, and <em>'In Progress'</em>. The problem: Python treats text matching as case-sensitive, and the real values sitting in the database were spelled differently — <em>'CONVERTED'</em> and <em>'converted'</em> (two separate values!) instead of <em>'Converted'</em>, and <em>'In Progress Positive'</em> / <em>'In Progress Negative'</em> instead of a single <em>'In Progress'</em>. Almost none of the guessed labels matched the real ones.</p>
+    <p>The result was quiet but serious: nearly every lead fell through to a default bucket and ended up in a single class. There was no error message at the moment the bug was introduced — the code ran fine. It only surfaced downstream, when some models refused to train because they were being asked to learn from data with only one possible answer, and other models reported a suspicious, meaningless 100% accuracy.</p>
+  </div>
+
+  <h3>5.2 How it was fixed</h3>
+  <p>The fix was to stop guessing and inspect the real, exact status text living in the database, then build the mapping from those verified strings.</p>
+  <table class="data">
+    <tr><th>Lead Category</th><th>Status Values Mapped</th></tr>
+    <tr><td><strong>High Potential</strong></td><td>CONVERTED, converted, In Progress Positive, Potential, Long Term</td></tr>
+    <tr><td><strong>Low Potential</strong></td><td>In Progress Negative, Not Responding, Just Enquiry, Junk Lead, LOST, Open</td></tr>
+  </table>
+  <div class="callout">
+    <strong>Result:</strong> After the fix, the split came out to a realistic 61.6% Low Potential vs. 38.4% High Potential (4,571 vs. 2,849 leads) — a genuine two-class target the models could actually learn from.
+  </div>
+
+  <h2 id="s6">6. Preparing the Data for Modelling</h2>
+  <p>A few extra features were engineered to give the model more to work with: the lead's creation date was split into year, month, and day (to catch seasonal patterns); the phone/email fields were converted into simple yes/no flags for whether contact details were provided at all, rather than using the raw numbers or addresses; and the Status column itself was dropped once Lead_Category was derived from it, to stop it from leaking the answer directly into the model's inputs.</p>
+  <p>Categorical columns were one-hot encoded, which expanded the feature set to 64 columns (mostly because Sales_Agent and Location have many distinct values). The data was then split into 5,936 training rows and 1,484 held-out test rows.</p>
+
+  <h2 id="s7">7. Building and Comparing the Models</h2>
+  <p>Five algorithms were trained and compared — Logistic Regression, Decision Tree, Random Forest, K-Nearest Neighbours, and Gradient Boosting — each deliberately tuned toward simpler, more conservative settings than their defaults, because 64 mostly-sparse one-hot columns on a moderate-sized dataset is exactly the situation where models tend to memorize noise instead of learning real patterns.</p>
+  <p>Random Forest was additionally put through a formal hyperparameter search (GridSearchCV), which improved its ability to catch High Potential leads but, as the table below shows, came at a cost.</p>
+
+  <table class="data">
+    <tr><th>Model</th><th>Train Acc.</th><th>Test Acc.</th><th>F1-Score</th><th>Train–Test Gap</th></tr>
+    <tr class="highlight"><td>Gradient Boosting</td><td>74.73%</td><td>72.04%</td><td>0.7112</td><td>2.70 pts</td></tr>
+    <tr><td>KNN</td><td>74.24%</td><td>69.00%</td><td>0.6810</td><td>5.24 pts</td></tr>
+    <tr><td>Logistic Regression</td><td>70.84%</td><td>68.13%</td><td>0.6851</td><td>2.71 pts</td></tr>
+    <tr><td>Random Forest (Tuned)</td><td>74.41%</td><td>67.72%</td><td>0.6816</td><td>6.69 pts</td></tr>
+    <tr><td>Random Forest</td><td>71.31%</td><td>66.31%</td><td>0.6676</td><td>5.00 pts</td></tr>
+    <tr><td>Decision Tree</td><td>67.05%</td><td>63.68%</td><td>0.6402</td><td>3.37 pts</td></tr>
+  </table>
+
+  <p>Gradient Boosting came out ahead in every column that matters: highest test accuracy, highest F1-score, and — critically — the smallest gap between how well it did on training data versus unseen test data. A small gap is the signal that a model is generalizing to new leads rather than just memorizing old ones.</p>
+  <p>The tuned Random Forest is a good illustration of a trap: grid search improved its cross-validated training score, but its train-test gap nearly tripled compared to the untuned version, meaning the tuning made it better at fitting the data it had already seen without making it meaningfully better at predicting new leads.</p>
+
+  <h2 id="s8">8. What Drives the Predictions</h2>
+  <p>Looking inside the Random Forest model's feature importance scores, geography stands out clearly: the location categories "Other Locations" and "Bangalore" together account for nearly 39% of everything the model uses to make its decision, with Product_ID contributing another ~19% and the delivery mode close behind. Individual sales agents and customer-referral leads also carry real weight, and the engineered date features show a smaller but non-zero contribution, justifying the effort of building them.</p>
+
+  <h2 id="s9">9. What This Means for FicZon</h2>
+  <ul>
+    <li>Lead scoring can move from a monthly post-mortem to a real-time signal agents see the moment a lead lands, letting effort go where conversion is most likely.</li>
+    <li>Because location is such a strong predictor, conversion likelihood clearly varies by region — a natural basis for territory-specific sales strategy.</li>
+    <li>Lead source and delivery mode matter enough that marketing spend could be rebalanced toward the channels that produce higher-quality leads.</li>
+    <li>Uneven workload across the 13 agents, and the fact that some agents' identities are themselves predictive, suggests that best practices from top performers could be identified and shared.</li>
+  </ul>
+
+  <h2 id="s10">10. Honest Limitations and Next Steps</h2>
+  <p>72% accuracy is a solid, usable starting point, not a finished product — roughly three out of ten leads will still be miscategorized, so this is best used to prioritize outreach order rather than to auto-reject leads outright. The report recommends validating the Status → Lead_Category mapping with FicZon's actual sales team, standardizing how status is entered in the future (to prevent a repeat of the CONVERTED/converted mismatch), monitoring the model's accuracy over time, and retraining periodically as products, agents, and seasonal patterns shift.</p>
+
+  <h2 id="s11">11. The Big Picture</h2>
+  <p>Beyond the accuracy numbers, the most instructive part of this project is the target-mapping bug itself: a small, silent mismatch in text casing was enough to collapse an entire dataset into a single class, and it produced no error at the point it was introduced — only confusing downstream symptoms. Catching it required going back to first principles: inspect the real values, don't assume them. That discipline, more than any single model choice, is what made the rest of the analysis trustworthy.</p>
+
+  <footer>
+    Based on PRCL-0019: Sales Effectiveness — Lead Category Prediction Using Machine Learning · DataMites Data Science Internship Program · Rubiex Internship Project for FicZon Inc.
+  </footer>
+
+</div>
+</body>
+</html>
